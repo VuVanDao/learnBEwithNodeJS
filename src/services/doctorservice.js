@@ -59,7 +59,16 @@ let GetAllDoctors = () => {
 const saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!inputData.doctorId || !inputData.action) {
+      if (
+        !inputData.doctorId ||
+        !inputData.action ||
+        !inputData.selectedPrice ||
+        !inputData.selectedPayment ||
+        !inputData.selectedProvince ||
+        !inputData.nameClinic ||
+        !inputData.addressClinic ||
+        !inputData.note
+      ) {
         resolve({
           errCode: 1,
           errMessage: "Missing parameter",
@@ -87,6 +96,35 @@ const saveDetailInforDoctor = (inputData) => {
             console.log("doctorMarkdown:", doctorMarkdown);
             await doctorMarkdown.save();
           }
+        }
+
+        let doctorInfo = await db.Doctor_infor.findOne({
+          where: {
+            doctorId: inputData.doctorId,
+          },
+          raw: false,
+        });
+        if (doctorInfo) {
+          //update
+          doctorInfo.doctorId = inputData.doctorId;
+          doctorInfo.priceId = inputData.selectedPrice;
+          doctorInfo.provinceId = inputData.selectedProvince;
+          doctorInfo.paymentId = inputData.selectedPayment;
+          doctorInfo.addressClinic = inputData.addressClinic;
+          doctorInfo.nameClinic = inputData.nameClinic;
+          doctorInfo.note = inputData.note;
+          await doctorInfo.save();
+        } else {
+          //crate
+          await db.Doctor_infor.create({
+            doctorId: inputData.doctorId,
+            priceId: inputData.selectedPrice,
+            provinceId: inputData.selectedProvince,
+            paymentId: inputData.selectedPayment,
+            addressClinic: inputData.addressClinic,
+            nameClinic: inputData.nameClinic,
+            note: inputData.note,
+          });
         }
         resolve({
           errCode: 0,
@@ -120,6 +158,29 @@ const getDetailDoctorById = (inputId) => {
               model: db.Allcode,
               as: "positionData",
               attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.Doctor_infor,
+              attributes: {
+                exclude: ["password", "id", "doctorId"],
+              },
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "priceTypeData",
+                  attributes: ["valueEn", "valueVi"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "provinceTypeData",
+                  attributes: ["valueEn", "valueVi"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "paymentTypeData",
+                  attributes: ["valueEn", "valueVi"],
+                },
+              ],
             },
           ],
           attributes: {
@@ -167,14 +228,9 @@ bulkCreateSchedule = (data) => {
           attributes: ["timeType", "date", "doctorId", "maxNumber"],
           raw: true,
         });
-        if (existing && existing.length > 0) {
-          existing = existing.map((item) => {
-            item.date = new Date(item.date).getTime();
-            return item;
-          });
-        }
+
         let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-          return a.timeType === b.timeType && a.date === b.date;
+          return a.timeType === b.timeType && +a.date === +b.date;
         });
         if (toCreate && toCreate.length > 0) {
           await db.schedule.bulkCreate(toCreate);
@@ -205,7 +261,18 @@ getScheduleByDate = (doctorId, date) => {
             doctorId: doctorId,
             date: date,
           },
+          include: [
+            {
+              model: db.Allcode,
+              as: "timeTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+          attributes: {
+            exclude: ["password"],
+          },
           raw: false,
+          nest: true,
         });
         if (!dataSchedule) {
           dataSchedule = [];
