@@ -38,6 +38,10 @@ let initWebRoutes = (app) => {
     "/api/get-extra-info-doctor-by-id",
     doctorController.getExtraInfoDoctorById
   );
+  route.get(
+    "/api/get-profile-doctor-by-id",
+    doctorController.getProfileDoctorById
+  );
 
   return app.use("/", route);
 };
