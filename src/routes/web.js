@@ -3,6 +3,7 @@ const express = require("express");
 const HomeController = require("../controller/HomeController.js");
 const userController = require("../controller/userControler.js");
 const doctorController = require("../controller/doctorController.js");
+const patientController = require("../controller/patientController.js");
 let route = express.Router();
 
 let initWebRoutes = (app) => {
@@ -41,6 +42,11 @@ let initWebRoutes = (app) => {
   route.get(
     "/api/get-profile-doctor-by-id",
     doctorController.getProfileDoctorById
+  );
+
+  route.post(
+    "/api/patient-book-appointment",
+    patientController.postBookAppointment
   );
 
   return app.use("/", route);
