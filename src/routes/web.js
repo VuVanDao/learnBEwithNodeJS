@@ -49,6 +49,11 @@ let initWebRoutes = (app) => {
     patientController.postBookAppointment
   );
 
+  route.post(
+    "/api/verify-book-appointment",
+    patientController.postVerifyBookAppointment
+  );
+
   return app.use("/", route);
 };
 module.exports = initWebRoutes;
