@@ -7,7 +7,7 @@ const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 const _ = require("lodash");
 const { v4: uuidv4 } = require("uuid");
 let buildUrlEmail = (doctorId, token) => {
-  let result = `${process.env.URL_REACT}/verify-booking?token=${token}$doctorId=${doctorId}`;
+  let result = `${process.env.URL_REACT}/verify-booking?token=${token}&doctorId=${doctorId}`;
   let id = uuidv4();
   return result;
 };
@@ -21,8 +21,6 @@ let postBookAppointment = (data) => {
         !data.timeType ||
         !data.fullName
       ) {
-        console.log("check", data);
-
         resolve({
           errCode: 1,
           errMessage: "Missing parameter",
@@ -47,6 +45,8 @@ let postBookAppointment = (data) => {
         });
         //booking
         if (user && user[0]) {
+          console.log("user:", user[0].id);
+
           await db.Booking.findOrCreate({
             where: { patientId: user[0].id },
             defaults: {
