@@ -65,8 +65,6 @@ let postBookAppointment = (data) => {
         });
       }
     } catch (error) {
-      console.log("e:", error);
-
       reject(error);
     }
   });
