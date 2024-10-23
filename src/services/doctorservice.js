@@ -56,22 +56,41 @@ let GetAllDoctors = () => {
     }
   });
 };
+
+let checkRequiredFields = (inputData) => {
+  let arr = [
+    "doctorId",
+    "action",
+    "selectedPrice",
+    "selectedPayment",
+    "selectedProvince",
+    "nameClinic",
+    "addressClinic",
+    "note",
+    "specialty",
+  ];
+  let valid = true;
+  let element = "";
+  for (let i = 0; i < arr.length; i++) {
+    if (!inputData[arr[i]]) {
+      element = arr[i];
+      valid = false;
+      break;
+    }
+  }
+  return {
+    valid: valid,
+    element: element,
+  };
+};
 const saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (
-        !inputData.doctorId ||
-        !inputData.action ||
-        !inputData.selectedPrice ||
-        !inputData.selectedPayment ||
-        !inputData.selectedProvince ||
-        !inputData.nameClinic ||
-        !inputData.addressClinic ||
-        !inputData.note
-      ) {
+      let checkObj = checkRequiredFields(inputData);
+      if (checkObj.valid === false) {
         resolve({
           errCode: 1,
-          errMessage: "Missing parameter",
+          errMessage: `Missing parameter ${checkObj.element}`,
         });
       } else {
         if (inputData.action === "CREATE") {
@@ -93,7 +112,6 @@ const saveDetailInforDoctor = (inputData) => {
             doctorMarkdown.contentMarkdown = inputData.contentMarkdown;
             doctorMarkdown.description = inputData.description;
             doctorMarkdown.updateAt = new Date();
-            console.log("doctorMarkdown:", doctorMarkdown);
             await doctorMarkdown.save();
           }
         }
@@ -113,6 +131,8 @@ const saveDetailInforDoctor = (inputData) => {
           doctorInfo.addressClinic = inputData.addressClinic;
           doctorInfo.nameClinic = inputData.nameClinic;
           doctorInfo.note = inputData.note;
+          doctorInfo.specialtyId = inputData.specialty;
+          doctorInfo.clinicId = inputData.clinic;
           await doctorInfo.save();
         } else {
           //crate
@@ -124,6 +144,8 @@ const saveDetailInforDoctor = (inputData) => {
             addressClinic: inputData.addressClinic,
             nameClinic: inputData.nameClinic,
             note: inputData.note,
+            specialtyId: inputData.specialty,
+            clinicId: inputData.clinic,
           });
         }
         resolve({
