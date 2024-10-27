@@ -5,6 +5,7 @@ const userController = require("../controller/userControler.js");
 const doctorController = require("../controller/doctorController.js");
 const patientController = require("../controller/patientController.js");
 const specialtyController = require("../controller/specialtyController.js");
+const clinicController = require("../controller/clinicController.js");
 let route = express.Router();
 
 let initWebRoutes = (app) => {
@@ -65,6 +66,14 @@ let initWebRoutes = (app) => {
     "/api/get-detail-specialty-by-id",
     specialtyController.getDetailSpecialtyById
   );
+
+  route.post("/api/create-new-clinic", clinicController.createNewClinic);
+
+  // route.get("/api/get-specialty", clinicController.getAllSpecialty);
+  // route.get(
+  //   "/api/get-detail-specialty-by-id",
+  //   specialtyController.getDetailSpecialtyById
+  // );
 
   return app.use("/", route);
 };
