@@ -132,7 +132,7 @@ const saveDetailInforDoctor = (inputData) => {
           doctorInfo.nameClinic = inputData.nameClinic;
           doctorInfo.note = inputData.note;
           doctorInfo.specialtyId = inputData.specialty;
-          doctorInfo.clinicId = inputData.clinic;
+          doctorInfo.clinicId = inputData.clinicId;
           await doctorInfo.save();
         } else {
           //crate

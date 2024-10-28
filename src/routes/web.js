@@ -69,11 +69,11 @@ let initWebRoutes = (app) => {
 
   route.post("/api/create-new-clinic", clinicController.createNewClinic);
 
-  // route.get("/api/get-specialty", clinicController.getAllSpecialty);
-  // route.get(
-  //   "/api/get-detail-specialty-by-id",
-  //   specialtyController.getDetailSpecialtyById
-  // );
+  route.get("/api/get-clinic", clinicController.getAllClinic);
+  route.get(
+    "/api/get-detail-clinic-by-id",
+    clinicController.getDetailClinicById
+  );
 
   return app.use("/", route);
 };
