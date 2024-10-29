@@ -74,7 +74,10 @@ let initWebRoutes = (app) => {
     "/api/get-detail-clinic-by-id",
     clinicController.getDetailClinicById
   );
-
+  route.get(
+    "/api/get-list-patient-for-doctor",
+    doctorController.getListPatientForDoctor
+  );
   return app.use("/", route);
 };
 module.exports = initWebRoutes;
