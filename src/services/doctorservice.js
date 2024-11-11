@@ -227,7 +227,7 @@ const getDetailDoctorById = (inputId) => {
     }
   });
 };
-bulkCreateSchedule = (data) => {
+const bulkCreateSchedule = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data.arrSchedule || !data.doctorId || !data.formatDate) {
@@ -270,7 +270,7 @@ bulkCreateSchedule = (data) => {
     }
   });
 };
-getScheduleByDate = (doctorId, date) => {
+const getScheduleByDate = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
       console.log(doctorId, date);
@@ -363,7 +363,7 @@ let getExtraInfoDoctorById = (doctorId) => {
     }
   });
 };
-getProfileDoctorById = (InputId) => {
+const getProfileDoctorById = (InputId) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!InputId) {
